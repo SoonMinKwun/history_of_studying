@@ -1,0 +1,11 @@
+웹 서버
+AWS
+
+WSGI 서버
+gunicorn
+
+웹 어플리케이션 프레임워크
+장고
+
+DB
+MongoDB
