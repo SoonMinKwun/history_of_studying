@@ -1,5 +1,5 @@
 웹 서버
-AWS
+AWS Lightsail
 
 WSGI 서버
 gunicorn
