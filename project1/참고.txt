@@ -1,5 +1,0 @@
-아키텍쳐 참고
-https://jay-ji.tistory.com/66
-
-농수축산물 가격 api
-http://data.seoul.go.kr/dataList/OA-1170/A/1/datasetView.do;jsessionid=C465397470709B13A6B5DB789CABF7F7.new_portal-svr-21
