@@ -10,3 +10,6 @@ profile = ProfileReport(df, title='Pandas Profiling Report')
 
 데이터 시각화 라이브러리
 seaborn
+
+csv에서 json 변환
+https://www.npmjs.com/package/csvtojson
