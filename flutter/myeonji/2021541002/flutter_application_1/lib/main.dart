@@ -1,5 +1,6 @@
 // ignore_for_file: prefer_const_constructors
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -56,7 +57,7 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
             ),
             const SizedBox(
-              height: 20.0,
+              height: 360.0,
             ),
             Row(mainAxisAlignment: MainAxisAlignment.center, children: [
               Flexible(
@@ -92,18 +93,19 @@ class _MyHomePageState extends State<MyHomePage> {
                 ),
               )
             ]),
-            const SizedBox(
-              height: 20.0,
-            ),
-            Center(
-              child: ElevatedButton(
-                onPressed: () {
-                  double _bmi = w / ((h / 100) * (h / 100));
-                  setState(() {
-                    bmi = _bmi;
-                  });
-                },
-                child: Text("확인"),
+            Flexible(
+              fit: FlexFit.tight,
+              child: Container(
+                width: 400.0,
+                child: ElevatedButton(
+                  onPressed: () {
+                    double _bmi = w / ((h / 100) * (h / 100));
+                    setState(() {
+                      bmi = _bmi;
+                    });
+                  },
+                  child: Text("확인"),
+                ),
               ),
             ),
           ]),
