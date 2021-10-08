@@ -1,8 +1,6 @@
-// ignore_for_file: prefer_const_constructors
-
 import 'package:flutter/material.dart';
-import 'my_home_page.dart';
-import 'login_page.dart';
+import 'package:bmi/my_home_page.dart';
+import 'package:bmi/login_page.dart';
 
 void main() {
   runApp(const MyApp());
@@ -16,11 +14,10 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: _jwt.isEmpty ? const LoginPage() : const MyHomePage(),
-    );
+        title: 'Flutter Demo',
+        theme: ThemeData(
+          primarySwatch: Colors.blue,
+        ),
+        home: _jwt.isEmpty ? const LoginPage() : const MyHomePage());
   }
 }
