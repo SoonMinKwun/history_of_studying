@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get_storage/get_storage.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -8,6 +9,7 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+  final box = GetStorage();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController _userIdController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
@@ -71,6 +73,9 @@ class _LoginPageState extends State<LoginPage> {
                   onPressed: () {
                     if (_formKey.currentState!.validate()) {
                       // 로그인 처리
+                      // FocusScope.of(context).
+
+                      box.write('jwt', 'abc');
                     }
                   },
                   child: const Text('로그인'),

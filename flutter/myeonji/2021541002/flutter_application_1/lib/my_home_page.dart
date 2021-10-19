@@ -1,6 +1,7 @@
 // ignore_for_file: prefer_const_constructors, prefer_final_fields, avoid_print, non_constant_identifier_names, unnecessary_brace_in_string_interps
 
 import 'package:flutter/material.dart';
+import 'package:get_storage/get_storage.dart';
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({Key? key}) : super(key: key);
@@ -10,6 +11,7 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  final box = GetStorage();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController _hController = TextEditingController();
   final TextEditingController _wController = TextEditingController();
@@ -28,6 +30,17 @@ class _MyHomePageState extends State<MyHomePage> {
       appBar: AppBar(
         title: const Text("BMI 계산기"),
         centerTitle: true,
+        actions: [
+          GestureDetector(
+            onTap: () {
+              box.write('jwt', '');
+            },
+            child: Container(
+                margin: const EdgeInsets.only(right: 50.0),
+                child: Icon(Icons.logout)),
+          ),
+        ],
+        // 로그아웃 구현
       ),
       resizeToAvoidBottomInset: false,
       body: Form(
@@ -149,15 +162,11 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   void initState() {
-    // ignore: todo
-    // TODO: implement initState
     super.initState();
   }
 
   @override
   void dispose() {
-    // ignore: todo
-    // TODO: implement dispose
     super.dispose();
   }
 }
