@@ -13,3 +13,6 @@ seaborn
 
 csv에서 json 변환
 https://www.npmjs.com/package/csvtojson
+
+장고 템플릿
+https://demos.creative-tim.com/black-dashboard-django/docs/1.0/getting-started/getting-started-django.html?_ga=2.41301995.89166186.1635152807-589825663.1635152807
