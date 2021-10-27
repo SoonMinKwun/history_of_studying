@@ -1,0 +1,21 @@
+# PACKAGES
+material (위젯 관련)
+google_fonts (폰트 관련)
+flutter_svg (이미지 로드 관련)
+timer_builder (시간 표현 관련)
+intl (시간 표현 관련)
+flutter_spinkit (로딩화면 관련)
+firebase_core (firebase 연동 관련)
+firebase_analytics (firebase 애널리틱스 연동)
+firebase_auth (로그인 관련)
+cloud_firestore (NoSQL DB 관련)
+
+Font & Icons
+https://github.com/christiannaths/Climacons-Font
+
+API
+Air Pollution (대기오염지수 API) (https://openweathermap.org/api/air-pollution)
+Current weather data (날씨 정보 API) (https://openweathermap.org/current)
+
+Plug-in
+FlutterFire (firebase_core, firebase_analytics, firebase_auth, cloud_firestore)
