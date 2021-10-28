@@ -9,6 +9,8 @@ firebase_core (firebase 연동 관련)
 firebase_analytics (firebase 애널리틱스 연동)
 firebase_auth (로그인 관련)
 cloud_firestore (NoSQL DB 관련)
+geolocator (사용자 위치 정보 이용 관련)
+http (인터넷을 사용해서 데이터를 가져오기 위해 사용하는 패키지)
 
 Font & Icons
 https://github.com/christiannaths/Climacons-Font
