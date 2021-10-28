@@ -24,7 +24,7 @@ def login_view(request):
                 login(request, user)
                 return redirect("/")
             else:
-                msg = 'Invalid credentials'
+                msg = '올바르지 않은 정보입니다!'
         else:
             msg = 'Error validating the form'
 
@@ -43,7 +43,7 @@ def register_user(request):
             raw_password = form.cleaned_data.get("password1")
             user = authenticate(username=username, password=raw_password)
 
-            msg = 'User created - please <a href="/login">login</a>.'
+            msg = '계정이 생성되었습니다! - <a href="/login">로그인하기</a>.'
             success = True
 
             # return redirect("/login/")

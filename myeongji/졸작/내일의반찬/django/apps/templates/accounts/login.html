@@ -16,13 +16,13 @@
                 {% csrf_token %} 
 
                 <div class="card-header">
-                  <h5 class="title">Login</h5>
+                  <h5 class="title">로그인</h5>
 
                   <h6 class="card-category">
                       {% if msg %}
                         <span class="text-danger">{{ msg }}</span>
                       {% else %}
-                        Add your credentials
+                        정보를 입력하세요!
                       {% endif %}  
                   </h6>
                 </div>
@@ -33,7 +33,7 @@
 
                       <div class="col-md-3 px-md-1">
                         <div class="form-group">
-                          <label>Username</label>
+                          <label>이름</label>
                           {{ form.username }}
                         </div>
                       </div>
@@ -43,7 +43,7 @@
 
                       <div class="col-md-3 px-md-1">
                         <div class="form-group">
-                          <label>Password</label>
+                          <label>비밀번호</label>
                           {{ form.password }}
                         </div>
                       </div>
@@ -52,9 +52,9 @@
                     
                 </div>
                 <div class="card-footer">
-                  <button type="submit" name="login" class="btn btn-fill btn-primary">Login</button>
+                  <button type="submit" name="login" class="btn btn-fill btn-primary">로그인</button>
                   &nbsp; &nbsp;
-                  Don't have an account? <a href="{% url 'register' %}" class="text-primary">Create</a>
+                  계정이 없으신가요? <a href="{% url 'register' %}" class="text-primary">만들기</a>
                 </div>
 
               </form>
