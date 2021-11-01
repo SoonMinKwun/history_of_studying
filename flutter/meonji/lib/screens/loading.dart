@@ -1,9 +1,10 @@
 // ignore_for_file: prefer_const_constructors, avoid_print
 
 import 'package:flutter/material.dart';
-import 'package:geolocator/geolocator.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
+import 'package:meonji/data/my_location.dart'; // 위치정보관련
+import 'package:meonji/data/network.dart'; // 날씨데이터 관련
+import 'package:meonji/api/key.dart';
+import 'package:meonji/screens/weather_screen.dart';
 
 class Loading extends StatefulWidget {
   const Loading({Key? key}) : super(key: key);
@@ -13,36 +14,35 @@ class Loading extends StatefulWidget {
 }
 
 class _LoadingState extends State<Loading> {
+  late double latitude3; // 위도 변수 선언
+  late double longitude3; // 경도 변수 선언
+
   @override
   void initState() {
     super.initState(); // 상태초기화 1회만 실행
     getLocation(); // 위치 정보 가져오기
-    fetchData();
   }
 
   void getLocation() async {
-    try {
-      Position position = await Geolocator.getCurrentPosition(
-          // 위치 정보를 position에 삽입
-          desiredAccuracy: LocationAccuracy.high); // 위치 정확도
-      print(position);
-    } catch (e) {
-      print('인터넷 연결에 문제가 생겼습니다!');
-    }
-  }
+    Mylocation myLocation = Mylocation();
+    await myLocation.getMyCurrentLocation();
+    latitude3 = myLocation.latitude2; // 위도 변수 삽입
+    longitude3 = myLocation.longitude2; // 경도 변수 삽입
+    print(latitude3);
+    print(longitude3);
 
-  void fetchData() async {
-    // uri 파싱
-    http.Response response = await http.get(Uri.parse(
-        'https://samples.openweathermap.org/data/2.5/weather?q=London&appid=b1b15e88fa797225412429c1c50c122a1'));
-    // api 호출 성공 시
-    if (response.statusCode == 200) {
-      String jsonData = response.body; // 바디부분 추출
-      var myJson = jsonDecode(jsonData)['weather'][0]['description'];
-      // 디코드 과정, api 호출 시 어떤 형태의 데이터가 올지 모름...
-      //그래서 변수 타입은 var, jsonDecode는 dynamic 타입을 받음
-      print(myJson);
-    }
+    Network network = Network(
+        'https://api.openweathermap.org/data/2.5/weather?lat=$latitude3&lon=$longitude3&appid=$apiKey&units=metric');
+
+    var weatherData = await network.getJsonData(); // api값을 그릇에 담기
+    print(weatherData);
+
+    // weather_screen으로 빌더를 넘기고 weatherData값 전달해서 라우트
+    Navigator.push(context, MaterialPageRoute(builder: (context) {
+      return WeatherScreen(
+        parseWeatherData: weatherData,
+      );
+    }));
   }
 
   @override
