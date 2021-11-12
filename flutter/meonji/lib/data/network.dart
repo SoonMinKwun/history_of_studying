@@ -2,12 +2,26 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 class Network {
-  final String url;
-  Network(this.url);
+  final String url; // 날씨 정보
+  final String url2; // 미세먼지 정보
+  Network(this.url, this.url2);
 
+  // 날씨 API
   Future<dynamic> getJsonData() async {
     // uri 파싱
     http.Response response = await http.get(Uri.parse(url));
+    // api 호출 성공 시
+    if (response.statusCode == 200) {
+      String jsonData = response.body; // 바디부분 추출
+      var parsingData = jsonDecode(jsonData);
+      return parsingData;
+    }
+  }
+
+  // 미세먼지 API
+  Future<dynamic> getAirData() async {
+    // uri 파싱
+    http.Response response = await http.get(Uri.parse(url2));
     // api 호출 성공 시
     if (response.statusCode == 200) {
       String jsonData = response.body; // 바디부분 추출

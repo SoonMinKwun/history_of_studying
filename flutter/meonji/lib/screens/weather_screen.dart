@@ -9,8 +9,9 @@ import 'package:meonji/model/model.dart'; // condition에 따른 svg 표시 조�
 
 // 빌더를 전달받음
 class WeatherScreen extends StatefulWidget {
-  WeatherScreen({this.parseWeatherData}); // 생성자 선언
-  final dynamic parseWeatherData;
+  WeatherScreen({this.parseWeatherData, this.parseAirPollution}); // 생성자 선언
+  final dynamic parseWeatherData; // 생성자 선언을 위한 날씨 정보 파싱
+  final dynamic parseAirPollution; // 생성자 선언을 위한 미세먼지 정보 파싱
 
   @override
   _WeatherScreenState createState() => _WeatherScreenState();
@@ -20,26 +21,35 @@ class WeatherScreen extends StatefulWidget {
 class _WeatherScreenState extends State<WeatherScreen> {
   late String cityName; // 도시명
   late int temp; // 온도
-  late Widget icon; // svg (아이콘 모양)
+  late Widget icon; // 날씨 아이콘
   late String des; // 날씨 설명
+  late Widget airIcon; // 미세먼지 아이콘
+  late Widget airState; // 미세먼지 설명
   var date = DateTime.now(); // 오늘 날짜
+  late double pm10; // 미세먼지 (PM10)
+  late double pm2_5; // 초미세먼지 (PM2.5)
 
   @override
   void initState() {
     // 부모 StatefulWidget(WeatherScreen)에서 parseWeatherData를 받아서 쓸 수 있음!
     super.initState();
-    updateData(widget.parseWeatherData);
+    updateData(widget.parseWeatherData, widget.parseAirPollution);
   }
 
   // 날씨 업데이트
-  void updateData(dynamic weatherData) {
+  void updateData(dynamic weatherData, dynamic airData) {
     Model model = Model(); // 날씨 Condition Model 객체
     double temp2 = weatherData['main']['temp']; // 온도
     int condition = weatherData['weather'][0]['id']; // 날씨 id
+    int index = airData['list'][0]['main']['aqi']; // 미세먼지 단계 (ex. 1,2,3,4,5...)
     des = weatherData['weather'][0]['description']; // 날씨 설명
+    pm10 = airData['list'][0]['components']['pm10']; // 미세먼지 수치 불러오기
+    pm2_5 = airData['list'][0]['components']['pm2_5']; // 초미세먼지 수치 불러오기
     temp = temp2.round(); // 반올림
     cityName = weatherData['name']; // 도시명
     icon = model.getWeatherIcon(condition); // 날씨 Condition 불러오기
+    airIcon = model.getAirIcon(index); // 미세먼지 아이콘 불러오기
+    airState = model.getAirCondition(index); // 미세먼지 상태 불러오기
 
     print(temp);
     print(cityName);
@@ -195,19 +205,9 @@ class _WeatherScreenState extends State<WeatherScreen> {
                                       fontSize: 14.0, color: Colors.white),
                                 ),
                                 SizedBox(height: 10.0),
-                                Image.asset(
-                                  'image/bad.png',
-                                  width: 37.0,
-                                  height: 35.0,
-                                ),
+                                airIcon,
                                 SizedBox(height: 10.0),
-                                Text(
-                                  '"매우 나쁨"',
-                                  style: GoogleFonts.lato(
-                                      fontSize: 14.0,
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.bold),
-                                ),
+                                airState,
                               ],
                             ),
                             Column(
@@ -219,7 +219,30 @@ class _WeatherScreenState extends State<WeatherScreen> {
                                 ),
                                 SizedBox(height: 10.0),
                                 Text(
-                                  '174.75',
+                                  '$pm10',
+                                  style: GoogleFonts.lato(
+                                      fontSize: 24.0, color: Colors.white),
+                                ),
+                                SizedBox(height: 10.0),
+                                Text(
+                                  '㎍/m³',
+                                  style: GoogleFonts.lato(
+                                      fontSize: 14.0,
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                              ],
+                            ),
+                            Column(
+                              children: [
+                                Text(
+                                  '초미세먼지',
+                                  style: GoogleFonts.lato(
+                                      fontSize: 14.0, color: Colors.white),
+                                ),
+                                SizedBox(height: 10.0),
+                                Text(
+                                  '$pm2_5',
                                   style: GoogleFonts.lato(
                                       fontSize: 24.0, color: Colors.white),
                                 ),
