@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "733080420270",
+    "project_id": "meonji-6fb27",
+    "storage_bucket": "meonji-6fb27.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:733080420270:android:6c746a6163e6fde7e8523f",
+        "android_client_info": {
+          "package_name": "com.example.meonji"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "733080420270-d8lkjv3o5pqj0hcda7l5r73plidnnu1h.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCXC1e3xzgBipcpONrhpw-SRJmDqzNWcHU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "733080420270-d8lkjv3o5pqj0hcda7l5r73plidnnu1h.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
