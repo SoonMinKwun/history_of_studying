@@ -3,6 +3,8 @@
 import 'package:flutter/material.dart';
 import 'package:meonji/config/palette.dart';
 import 'package:google_fonts/google_fonts.dart'; // 폰트
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:meonji/screens/loading.dart'; // 사용자 등록/인증 관련
 
 class LoginSignupScreen extends StatefulWidget {
   const LoginSignupScreen({Key? key}) : super(key: key);
@@ -12,6 +14,8 @@ class LoginSignupScreen extends StatefulWidget {
 }
 
 class _LoginSignupScreenState extends State<LoginSignupScreen> {
+  // firebase auth 인스턴스 생성 (변하지 않는 private)
+  final _authentification = FirebaseAuth.instance;
   bool isSignupScreen = true;
   final _formKey = GlobalKey<FormState>();
   String userName = ''; // 검증값 (이름)
@@ -100,7 +104,7 @@ class _LoginSignupScreenState extends State<LoginSignupScreen> {
                 duration: Duration(milliseconds: 500),
                 curve: Curves.easeIn,
                 padding: EdgeInsets.all(20.0),
-                height: isSignupScreen ? 280.0 : 250.0,
+                height: isSignupScreen ? 330.0 : 300.0,
                 width: MediaQuery.of(context).size.width - 40,
                 margin: EdgeInsets.symmetric(horizontal: 20.0),
                 decoration: BoxDecoration(
@@ -176,7 +180,7 @@ class _LoginSignupScreenState extends State<LoginSignupScreen> {
                           )
                         ],
                       ),
-                      if (isSignupScreen)
+                      if (isSignupScreen) // 회원가입 페이지
                         Container(
                           margin: EdgeInsets.only(top: 20),
                           child: Form(
@@ -187,7 +191,7 @@ class _LoginSignupScreenState extends State<LoginSignupScreen> {
                                   key: ValueKey(1),
                                   validator: (value) {
                                     if (value!.isEmpty || value!.length < 4) {
-                                      return 'Please enter at least 4 characters';
+                                      return '이름은 두 글자 이상을 입력해주세요! (4 character+)';
                                     }
                                     return null;
                                   },
@@ -225,112 +229,15 @@ class _LoginSignupScreenState extends State<LoginSignupScreen> {
                                       contentPadding: EdgeInsets.all(10)),
                                 ),
                                 SizedBox(
-                                  height: 8,
+                                  height: 8.0,
                                 ),
                                 TextFormField(
+                                  keyboardType: TextInputType.emailAddress,
                                   key: ValueKey(2),
                                   validator: (value) {
                                     if (value!.isEmpty ||
                                         !value.contains('@')) {
-                                      return 'Please enter a valid email address.';
-                                    }
-                                    return null;
-                                  },
-                                  // 검증하기 위한 입력 값 저장
-                                  onSaved: (value) {
-                                    userEmail = value!;
-                                  },
-                                  // Firebase에서 검증하기 위한 입력 값 저장
-                                  onChanged: (value) {
-                                    userEmail = value;
-                                  },
-                                  decoration: InputDecoration(
-                                      prefixIcon: Icon(
-                                        Icons.email,
-                                        color: Palette.iconColor,
-                                      ),
-                                      enabledBorder: OutlineInputBorder(
-                                        borderSide: BorderSide(
-                                            color: Palette.textColor1),
-                                        borderRadius: BorderRadius.all(
-                                          Radius.circular(35.0),
-                                        ),
-                                      ),
-                                      focusedBorder: OutlineInputBorder(
-                                        borderSide: BorderSide(
-                                            color: Palette.textColor1),
-                                        borderRadius: BorderRadius.all(
-                                          Radius.circular(35.0),
-                                        ),
-                                      ),
-                                      hintText: 'email',
-                                      hintStyle: TextStyle(
-                                          fontSize: 14,
-                                          color: Palette.textColor1),
-                                      contentPadding: EdgeInsets.all(10)),
-                                ),
-                                SizedBox(
-                                  height: 8,
-                                ),
-                                TextFormField(
-                                  obscureText: true,
-                                  key: ValueKey(3),
-                                  validator: (value) {
-                                    if (value!.isEmpty || value.length < 6) {
-                                      return 'Password must be at least 7 characters long.';
-                                    }
-                                    return null;
-                                  },
-                                  // 검증하기 위한 입력 값 저장
-                                  onSaved: (value) {
-                                    userPassword = value!;
-                                  },
-                                  // Firebase에서 검증하기 위한 입력 값 저장
-                                  onChanged: (value) {
-                                    userPassword = value;
-                                  },
-                                  decoration: InputDecoration(
-                                      prefixIcon: Icon(
-                                        Icons.lock,
-                                        color: Palette.iconColor,
-                                      ),
-                                      enabledBorder: OutlineInputBorder(
-                                        borderSide: BorderSide(
-                                            color: Palette.textColor1),
-                                        borderRadius: BorderRadius.all(
-                                          Radius.circular(35.0),
-                                        ),
-                                      ),
-                                      focusedBorder: OutlineInputBorder(
-                                        borderSide: BorderSide(
-                                            color: Palette.textColor1),
-                                        borderRadius: BorderRadius.all(
-                                          Radius.circular(35.0),
-                                        ),
-                                      ),
-                                      hintText: 'password',
-                                      hintStyle: TextStyle(
-                                          fontSize: 14,
-                                          color: Palette.textColor1),
-                                      contentPadding: EdgeInsets.all(10)),
-                                )
-                              ],
-                            ),
-                          ),
-                        ),
-                      if (!isSignupScreen)
-                        Container(
-                          margin: EdgeInsets.only(top: 20),
-                          child: Form(
-                            key: _formKey,
-                            child: Column(
-                              children: [
-                                TextFormField(
-                                  key: ValueKey(4),
-                                  validator: (value) {
-                                    if (value!.isEmpty ||
-                                        !value.contains('@')) {
-                                      return 'Please enter a valid email address.';
+                                      return '올바르지 않은 이메일 형식입니다! (@가 빠졌어요!)';
                                     }
                                     return null;
                                   },
@@ -371,10 +278,111 @@ class _LoginSignupScreenState extends State<LoginSignupScreen> {
                                   height: 8.0,
                                 ),
                                 TextFormField(
+                                  obscureText: true,
+                                  key: ValueKey(3),
+                                  validator: (value) {
+                                    if (value!.isEmpty || value.length < 6) {
+                                      return '패스워드는 7글자 이상이어야 해요!';
+                                    }
+                                    return null;
+                                  },
+
+                                  // 검증하기 위한 입력 값 저장
+                                  onSaved: (value) {
+                                    userPassword = value!;
+                                  },
+                                  // Firebase에서 검증하기 위한 입력 값 저장
+                                  onChanged: (value) {
+                                    userPassword = value;
+                                  },
+                                  decoration: InputDecoration(
+                                      prefixIcon: Icon(
+                                        Icons.lock,
+                                        color: Palette.iconColor,
+                                      ),
+                                      enabledBorder: OutlineInputBorder(
+                                        borderSide: BorderSide(
+                                            color: Palette.textColor1),
+                                        borderRadius: BorderRadius.all(
+                                          Radius.circular(35.0),
+                                        ),
+                                      ),
+                                      focusedBorder: OutlineInputBorder(
+                                        borderSide: BorderSide(
+                                            color: Palette.textColor1),
+                                        borderRadius: BorderRadius.all(
+                                          Radius.circular(35.0),
+                                        ),
+                                      ),
+                                      hintText: 'password',
+                                      hintStyle: TextStyle(
+                                          fontSize: 14,
+                                          color: Palette.textColor1),
+                                      contentPadding: EdgeInsets.all(10)),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      if (!isSignupScreen) // 로그인 페이지
+                        Container(
+                          margin: EdgeInsets.only(top: 20),
+                          child: Form(
+                            key: _formKey,
+                            child: Column(
+                              children: [
+                                TextFormField(
+                                  keyboardType: TextInputType.emailAddress,
+                                  key: ValueKey(4),
+                                  validator: (value) {
+                                    if (value!.isEmpty ||
+                                        !value.contains('@')) {
+                                      return '올바르지 않은 이메일 형식입니다! (@가 빠졌어요!)';
+                                    }
+                                    return null;
+                                  },
+                                  // 검증하기 위한 입력 값 저장
+                                  onSaved: (value) {
+                                    userEmail = value!;
+                                  },
+                                  // Firebase에서 검증하기 위한 입력 값 저장
+                                  onChanged: (value) {
+                                    userEmail = value;
+                                  },
+                                  decoration: InputDecoration(
+                                      prefixIcon: Icon(
+                                        Icons.email,
+                                        color: Palette.iconColor,
+                                      ),
+                                      enabledBorder: OutlineInputBorder(
+                                        borderSide: BorderSide(
+                                            color: Palette.textColor1),
+                                        borderRadius: BorderRadius.all(
+                                          Radius.circular(35.0),
+                                        ),
+                                      ),
+                                      focusedBorder: OutlineInputBorder(
+                                        borderSide: BorderSide(
+                                            color: Palette.textColor1),
+                                        borderRadius: BorderRadius.all(
+                                          Radius.circular(35.0),
+                                        ),
+                                      ),
+                                      hintText: 'email',
+                                      hintStyle: TextStyle(
+                                          fontSize: 14,
+                                          color: Palette.textColor1),
+                                      contentPadding: EdgeInsets.all(10)),
+                                ),
+                                SizedBox(
+                                  height: 20.0,
+                                ),
+                                TextFormField(
+                                  obscureText: true,
                                   key: ValueKey(5),
                                   validator: (value) {
                                     if (value!.isEmpty || value.length < 6) {
-                                      return 'Password must be at least 7 characters long.';
+                                      return '패스워드는 7글자 이상이어야 해요!';
                                     }
                                     return null;
                                   },
@@ -424,7 +432,7 @@ class _LoginSignupScreenState extends State<LoginSignupScreen> {
             AnimatedPositioned(
               duration: Duration(milliseconds: 500),
               curve: Curves.easeIn,
-              top: isSignupScreen ? 430 : 390,
+              top: isSignupScreen ? 480 : 410,
               right: 0,
               left: 0,
               child: Center(
@@ -436,11 +444,71 @@ class _LoginSignupScreenState extends State<LoginSignupScreen> {
                       color: Colors.white,
                       borderRadius: BorderRadius.circular(50)),
                   child: GestureDetector(
-                    onTap: () {
-                      _tryValidation();
-                      print(userName);
-                      print(userEmail);
-                      print(userPassword);
+                    onTap: () async {
+                      // 회원가입 화면일 경우
+                      if (isSignupScreen) {
+                        _tryValidation();
+
+                        // 회원가입 성공
+                        try {
+                          final newUser = await _authentification
+                              .createUserWithEmailAndPassword(
+                            email: userEmail,
+                            password: userPassword,
+                          );
+
+                          // 가입성공 후 Loading 페이지로 이동
+                          if (newUser.user != null) {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (context) {
+                                return Loading(); // Loading 페이지로 이동
+                              }),
+                            );
+                          }
+                          // 회원가입 실패
+                        } catch (e) {
+                          print(e); // 콘솔
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text('잘못된 이메일이나 비밀번호입니다!'),
+                              backgroundColor: Colors.blue,
+                            ),
+                          );
+                        }
+                      }
+
+                      // 로그인 화면일 경우
+                      if (!isSignupScreen) {
+                        _tryValidation();
+
+                        try {
+                          // 로그인 정보 넘겨주기
+                          final newUser = await _authentification
+                              .signInWithEmailAndPassword(
+                            email: userEmail,
+                            password: userPassword,
+                          );
+
+                          // 가입성공 후 Loading 페이지로 이동
+                          if (newUser.user != null) {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (context) {
+                                return Loading(); // Loading 페이지로 이동
+                              }),
+                            );
+                          }
+                        } catch (e) {
+                          print(e); // 콘솔
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text('잘못된 이메일이나 비밀번호입니다!'),
+                              backgroundColor: Colors.blue,
+                            ),
+                          );
+                        }
+                      }
                     },
                     child: Container(
                       decoration: BoxDecoration(
@@ -478,6 +546,7 @@ class _LoginSignupScreenState extends State<LoginSignupScreen> {
               left: 0,
               child: Column(
                 children: [
+                  SizedBox(height: 12.0),
                   Text(
                     isSignupScreen ? 'or Signup with' : 'or Signin with',
                     style: GoogleFonts.lato(

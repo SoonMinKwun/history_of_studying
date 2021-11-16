@@ -5,8 +5,7 @@ import 'package:meonji/data/my_location.dart'; // 위치정보관련
 import 'package:meonji/data/network.dart'; // 날씨데이터 관련
 import 'package:meonji/api/key.dart'; // API Key
 import 'package:meonji/screens/weather_screen.dart';
-import 'package:animated_splash_screen/animated_splash_screen.dart'; // 로딩 화면 관련
-import 'package:page_transition/page_transition.dart'; // 로딩 화면 관련
+import 'package:firebase_auth/firebase_auth.dart'; // 사용자 등록/인증 관련
 
 class Loading extends StatefulWidget {
   const Loading({Key? key}) : super(key: key);
@@ -18,11 +17,31 @@ class Loading extends StatefulWidget {
 class _LoadingState extends State<Loading> {
   late double latitude3; // 위도 변수 선언
   late double longitude3; // 경도 변수 선언
+  final _authentification =
+      FirebaseAuth.instance; // firebase auth 인스턴스 생성 (변하지 않는 private)
+  User? loggedUser; // 로그인된 유저
+
+  // 유저 정보 불러오기
+  void getCurrentUser() {
+    try {
+      final user =
+          _authentification.currentUser; // _authentification에서 가져온 유저 이름을 삽입
+      // 로그인 성공시
+      if (user != null) {
+        loggedUser = user;
+        print(loggedUser!.email);
+      }
+      // 로그인 실패시
+    } catch (e) {
+      print(e);
+    }
+  }
 
   @override
   void initState() {
     super.initState(); // 상태초기화 1회만 실행
     getLocation(); // 위치 정보 가져오기
+    getCurrentUser(); // 초기화 될때마다 유저 정보 불러오기
   }
 
   void getLocation() async {
@@ -52,17 +71,6 @@ class _LoadingState extends State<Loading> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-        home: AnimatedSplashScreen(
-            duration: 3000,
-            splash: Image.asset(
-              'image/logo.png',
-              width: 300.0,
-              height: 300.0,
-            ),
-            nextScreen: WeatherScreen(),
-            splashTransition: SplashTransition.fadeTransition,
-            pageTransitionType: PageTransitionType.scale,
-            backgroundColor: Colors.white));
+    return CircularProgressIndicator(); // 로딩화면
   }
 }

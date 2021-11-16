@@ -4,8 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart'; // 폰트
 import 'package:flutter_svg/flutter_svg.dart'; // svg 사용하기 위함
 import 'package:intl/intl.dart'; // DateTime Format
+import 'package:meonji/screens/login.dart';
 import 'package:timer_builder/timer_builder.dart'; // 시스템 시간 불러오기 위함
 import 'package:meonji/model/model.dart'; // condition에 따른 svg 표시 조건문
+import 'package:firebase_auth/firebase_auth.dart'; // 사용자 등록/인증 관련
 
 // 빌더를 전달받음
 class WeatherScreen extends StatefulWidget {
@@ -28,12 +30,32 @@ class _WeatherScreenState extends State<WeatherScreen> {
   var date = DateTime.now(); // 오늘 날짜
   late double pm10; // 미세먼지 (PM10)
   late double pm2_5; // 초미세먼지 (PM2.5)
+  final _authentification =
+      FirebaseAuth.instance; // firebase auth 인스턴스 생성 (변하지 않는 private)
+  User? loggedUser; // 로그인된 유저
+
+  // 유저 정보 불러오기
+  void getCurrentUser() {
+    try {
+      final user =
+          _authentification.currentUser; // _authentification에서 가져온 유저 이름을 삽입
+      // 로그인 성공시
+      if (user != null) {
+        loggedUser = user;
+        print(loggedUser!.email);
+      }
+      // 로그인 실패시
+    } catch (e) {
+      print(e);
+    }
+  }
 
   @override
   void initState() {
     // 부모 StatefulWidget(WeatherScreen)에서 parseWeatherData를 받아서 쓸 수 있음!
     super.initState();
     updateData(widget.parseWeatherData, widget.parseAirPollution);
+    getCurrentUser(); // 초기화 될때마다 유저 정보 불러오기
   }
 
   // 날씨 업데이트
@@ -73,7 +95,7 @@ class _WeatherScreenState extends State<WeatherScreen> {
           // 현재 위치 버튼
           icon: Icon(Icons.near_me),
           onPressed: () {},
-          iconSize: 30.0,
+          iconSize: 40.0,
         ),
         actions: [
           IconButton(
@@ -82,7 +104,32 @@ class _WeatherScreenState extends State<WeatherScreen> {
               Icons.location_searching,
             ),
             onPressed: () {},
-            iconSize: 30.0,
+            iconSize: 40.0,
+          ),
+          IconButton(
+            // 로그아웃 버튼
+            icon: Icon(
+              Icons.exit_to_app,
+            ),
+            onPressed: () {
+              _authentification.signOut(); // 로그아웃
+              // Navigator.pop(
+              //   context,
+              //   MaterialPageRoute(
+              //     builder: (context) {
+              //       return LoginSignupScreen(); // 로그인 페이지로 이동
+              //     },
+              //   ),
+              // );
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                  builder: (BuildContext context) =>
+                      LoginSignupScreen(), // 로그인 페이지로 이동
+                ),
+              );
+            },
+            iconSize: 40.0,
           )
         ],
       ),
