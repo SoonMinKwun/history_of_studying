@@ -3,12 +3,11 @@
     <div class="sidebar">
       <div class="sidebar-wrapper">
         <div class="logo">
-          <a target="_blank" rel="sponsored noopener noreferrer" 
-             href="" class="simple-text logo-mini">
+          <a
+             class="simple-text logo-mini">
             ◆
           </a>
-          <a target="_blank" rel="sponsored noopener noreferrer" 
-             href="" class="simple-text logo-normal">
+          <a class="simple-text logo-normal">
             카테고리
           </a>
         </div>
@@ -16,34 +15,46 @@
         <ul class="nav">
         {% if request.user.is_authenticated %}
 
-          <li class="{% if 'index' in segment %} active {% endif %}">
-            <a href="/">
-              <i class="tim-icons icon-chart-pie-36"></i>
-              <p>생선</p>
-            </a>
-          </li>
-          <li class="{% if 'icons' in segment %} active {% endif %}">
-            <a href="/ui-icons.html">
-              <i class="tim-icons icon-atom"></i>
-              <p>달걀</p>
-            </a>
-          </li>
-          <li class="{% if 'maps' in segment %} active {% endif %}">
-            <a href="/ui-maps.html">
+          <li class="{% if 'vegetable' in segment %} active {% endif %}">
+            <a href="/vegetable.html">
               <i class="tim-icons icon-pin"></i>
-              <p>육류</p>
+              <p>채소류</p>
             </a>
           </li>
-          <li class="{% if 'notifications' in segment %} active {% endif %}">
-            <a href="/ui-notifications.html">
-              <i class="tim-icons icon-bell-55"></i>
-              <p>채소</p>
+          <li class="{% if 'fruit' in segment %} active {% endif %}">
+            <a href="/fruit.html">
+              <i class="tim-icons icon-pin"></i>
+              <p>과일류</p>
             </a>
           </li>
-          <li class="{% if 'page-user' in segment %} active {% endif %}">
-            <a href="/page-user.html">
-              <i class="tim-icons icon-single-02"></i>
-              <p>과일</p>
+          <li class="{% if 'egg' in segment %} active {% endif %}">
+            <a href="/egg.html">
+              <i class="tim-icons icon-pin"></i>
+              <p>달걀류</p>
+            </a>
+          </li>
+          <li class="{% if 'seafood' in segment %} active {% endif %}">
+            <a href="/seafood.html">
+              <i class="tim-icons icon-pin"></i>
+              <p>해산물</p>
+            </a>
+          </li>
+          <li class="{% if 'chicken' in segment %} active {% endif %}">
+            <a href="/chicken.html">
+              <i class="tim-icons icon-pin"></i>
+              <p>닭고기</p>
+            </a>
+          </li>
+          <li class="{% if 'pork' in segment %} active {% endif %}">
+            <a href="/pork.html">
+              <i class="tim-icons icon-pin"></i>
+              <p>돼지고기</p>
+            </a>
+          </li>
+          <li class="{% if 'beaf' in segment %} active {% endif %}">
+            <a href="/beaf.html">
+              <i class="tim-icons icon-pin"></i>
+              <p>소고기</p>
             </a>
           </li>
           {% comment %} <li class="{% if 'tables' in segment %} active {% endif %}">
