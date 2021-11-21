@@ -42,6 +42,7 @@ To whom may concerns, (담당자께...) - 고정
 .
 .
 2문단 (인턴쉽 지원 직무에 대한 자기 어필)
+For my internship, I am very interested in
 .
 .
 3문단 (기업에 기여할 태도와 인턴쉽 지원하는 나의 각오)
@@ -53,7 +54,7 @@ I am available for an internship from March to September 2022. I would be please
 .
 연락 기다리겠습니다.... (영어로 표현 찾아바)
 
-Thank you so much,
+Thank you very much,
 
 Sincerely,
 
