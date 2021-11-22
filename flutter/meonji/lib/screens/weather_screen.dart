@@ -8,12 +8,17 @@ import 'package:meonji/screens/login.dart';
 import 'package:timer_builder/timer_builder.dart'; // 시스템 시간 불러오기 위함
 import 'package:meonji/model/model.dart'; // condition에 따른 svg 표시 조건문
 import 'package:firebase_auth/firebase_auth.dart'; // 사용자 등록/인증 관련
+import 'package:meonji/data/my_location.dart'; // 위치정보관련
+import 'package:meonji/data/network.dart'; // 날씨데이터 관련
+import 'package:meonji/api/key.dart'; // API Key
+import 'package:meonji/screens/search.dart'; // 위치 검색 페이지
+import 'dart:io'; // sleep 기능 관련
 
 // 빌더를 전달받음
 class WeatherScreen extends StatefulWidget {
   WeatherScreen({this.parseWeatherData, this.parseAirPollution}); // 생성자 선언
-  final dynamic parseWeatherData; // 생성자 선언을 위한 날씨 정보 파싱
-  final dynamic parseAirPollution; // 생성자 선언을 위한 미세먼지 정보 파싱
+  dynamic parseWeatherData; // 생성자 선언을 위한 날씨 정보 파싱
+  dynamic parseAirPollution; // 생성자 선언을 위한 미세먼지 정보 파싱
 
   @override
   _WeatherScreenState createState() => _WeatherScreenState();
@@ -33,6 +38,8 @@ class _WeatherScreenState extends State<WeatherScreen> {
   final _authentification =
       FirebaseAuth.instance; // firebase auth 인스턴스 생성 (변하지 않는 private)
   User? loggedUser; // 로그인된 유저
+  late double currentLatitude; // 최근 위도 변수 선언
+  late double currentLongitude; // 최근 경도 변수 선언
 
   // 유저 정보 불러오기
   void getCurrentUser() {
@@ -73,14 +80,39 @@ class _WeatherScreenState extends State<WeatherScreen> {
     airIcon = model.getAirIcon(index); // 미세먼지 아이콘 불러오기
     airState = model.getAirCondition(index); // 미세먼지 상태 불러오기
 
-    print(temp);
-    print(cityName);
+    print('날씨 불러오기 완료');
   }
 
   // 시스템 시간 불러오기 함수
   String getSystemTime() {
     var now = DateTime.now();
     return DateFormat("hh:mm a").format(now);
+  }
+
+  // 현재 위치로 업데이트
+  void getCurrentLocation() async {
+    print('날씨 업데이트를 시작합니다.');
+
+    Mylocation myLocation = Mylocation();
+    await myLocation.getMyCurrentLocation();
+    currentLatitude = myLocation.latitude2; // 위도 변수 삽입
+    currentLongitude = myLocation.longitude2; // 경도 변수 삽입
+    print(currentLatitude);
+    print(currentLongitude);
+
+    Network network = Network(
+        'https://api.openweathermap.org/data/2.5/weather?lat=$currentLatitude&lon=$currentLongitude&appid=$apiKey&units=metric',
+        'https://api.openweathermap.org/data/2.5/air_pollution?lat=$currentLatitude&lon=$currentLongitude&appid=$apiKey');
+
+    var weatherData = await network.getJsonData(); // api값을 그릇에 담기 (날씨 정보)
+    print(weatherData);
+
+    var airData = await network.getAirData(); // api값을 그릇에 담기 (미세먼지 정보)
+    print(airData);
+
+    widget.parseWeatherData = weatherData; // 새로운 날씨 데이터 삽입
+    widget.parseAirPollution = airData; // 새로운 공기 데이터 삽입
+    print('새로운 날씨, 공기 데이터 업데이트 완료');
   }
 
   @override
@@ -94,7 +126,13 @@ class _WeatherScreenState extends State<WeatherScreen> {
         leading: IconButton(
           // 현재 위치 버튼
           icon: Icon(Icons.near_me),
-          onPressed: () {},
+          onPressed: () {
+            getCurrentLocation(); // 현재 위치 불러오기
+            updateData(widget.parseWeatherData,
+                widget.parseAirPollution); // 날씨, 공기 데이터 업데이트
+            setState(() {});
+            print('현재 위치 버튼 클릭 완료');
+          },
           iconSize: 40.0,
         ),
         actions: [
@@ -103,7 +141,16 @@ class _WeatherScreenState extends State<WeatherScreen> {
             icon: Icon(
               Icons.location_searching,
             ),
-            onPressed: () {},
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) {
+                    return Search();
+                  },
+                ),
+              );
+            },
             iconSize: 40.0,
           ),
           IconButton(
@@ -180,7 +227,6 @@ class _WeatherScreenState extends State<WeatherScreen> {
                                     TimerBuilder.periodic(
                                       (Duration(minutes: 1)),
                                       builder: (context) {
-                                        print('${getSystemTime()}');
                                         return Text(
                                           '${getSystemTime()}',
                                           style: GoogleFonts.lato(

@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:meonji/data/my_location.dart'; // 위치정보관련
 import 'package:meonji/data/network.dart'; // 날씨데이터 관련
 import 'package:meonji/api/key.dart'; // API Key
-import 'package:meonji/screens/weather_screen.dart';
+import 'package:meonji/screens/weather_screen.dart'; // 날씨 표시 페이지
 import 'package:firebase_auth/firebase_auth.dart'; // 사용자 등록/인증 관련
 
 class Loading extends StatefulWidget {
@@ -45,6 +45,8 @@ class _LoadingState extends State<Loading> {
   }
 
   void getLocation() async {
+    print('loading.dart is running');
+
     Mylocation myLocation = Mylocation();
     await myLocation.getMyCurrentLocation();
     latitude3 = myLocation.latitude2; // 위도 변수 삽입
@@ -63,10 +65,15 @@ class _LoadingState extends State<Loading> {
     print(airData);
 
     // weather_screen으로 빌더를 넘기고 weatherData값 전달해서 라우트
-    Navigator.push(context, MaterialPageRoute(builder: (context) {
-      return WeatherScreen(
-          parseWeatherData: weatherData, parseAirPollution: airData);
-    }));
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) {
+          return WeatherScreen(
+              parseWeatherData: weatherData, parseAirPollution: airData);
+        },
+      ),
+    );
   }
 
   @override

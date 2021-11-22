@@ -461,9 +461,11 @@ class _LoginSignupScreenState extends State<LoginSignupScreen> {
                           if (newUser.user != null) {
                             Navigator.push(
                               context,
-                              MaterialPageRoute(builder: (context) {
-                                return Loading(); // Loading 페이지로 이동
-                              }),
+                              MaterialPageRoute(
+                                builder: (context) {
+                                  return Loading(); // Loading 페이지로 이동
+                                },
+                              ),
                             );
                           }
                           // 회원가입 실패
