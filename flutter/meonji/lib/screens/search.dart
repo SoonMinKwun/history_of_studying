@@ -25,7 +25,7 @@ class _SearchState extends State<Search> {
     setState(
       () {
         state = stateController.text;
-        print('$state 의 날짜를 가져옵니다...');
+        print('$state 의 날씨를 가져옵니다...');
       },
     );
   }
@@ -49,16 +49,21 @@ class _SearchState extends State<Search> {
     var airData = await network.getAirData(); // api값을 그릇에 담기 (미세먼지 정보)
     print(airData);
 
-    // weather_screen으로 빌더를 넘기고 weatherData값 전달해서 라우트
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) {
-          return WeatherScreen(
-              parseWeatherData: weatherData, parseAirPollution: airData);
-        },
-      ),
-    );
+    // API 불러오기 실패 처리
+    if (weatherData == null || airData == null) {
+      print('옳바르지 않은 도시명입니다.');
+    } else {
+      // weather_screen으로 빌더를 넘기고 weatherData값 전달해서 라우트
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) {
+            return WeatherScreen(
+                parseWeatherData: weatherData, parseAirPollution: airData);
+          },
+        ),
+      );
+    }
   }
 
   @override
