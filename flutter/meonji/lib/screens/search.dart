@@ -19,6 +19,7 @@ class _SearchState extends State<Search> {
   late String state; // 지역명
   late double currentLatitude; // 최근 위도 변수 선언
   late double currentLongitude; // 최근 경도 변수 선언
+  bool api_null_check = false; // api null 체크
 
   // 지역 가져오기
   void searchLocation() {
@@ -52,7 +53,10 @@ class _SearchState extends State<Search> {
     // API 불러오기 실패 처리
     if (weatherData == null || airData == null) {
       print('옳바르지 않은 도시명입니다.');
+      api_null_check = true; // api가 null
     } else {
+      // api가 not null
+      api_null_check = false;
       // weather_screen으로 빌더를 넘기고 weatherData값 전달해서 라우트
       Navigator.push(
         context,
@@ -131,9 +135,23 @@ class _SearchState extends State<Search> {
 
                           // 검색하기 버튼 폼
                           TextButton.icon(
-                            onPressed: () {
+                            onPressed: () async {
                               searchLocation();
                               sendLocation();
+                              // 에러메시지
+                              await Future.delayed(
+                                // 딜레이...
+                                const Duration(milliseconds: 1000),
+                                () {
+                                  if (api_null_check == true) {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      const SnackBar(
+                                        content: Text('존재하지 않는 지역입니다ㅠㅠ'),
+                                      ),
+                                    );
+                                  }
+                                },
+                              );
                             },
                             icon: Icon(
                               Icons.location_searching,

@@ -193,193 +193,193 @@ class _WeatherScreenState extends State<WeatherScreen> {
             ),
             // 날씨 정보 보여주기 컨테이너
             Container(
-                padding: EdgeInsets.all(20.0),
-                child:
-                    // 1번 Column
-                    Column(
-                  mainAxisAlignment:
-                      MainAxisAlignment.spaceBetween, // Column 사이 공백 넣기
-                  children: [
-                    // 확보할 수 있는 공간 최대로 하는 Widget
-                    Expanded(
-                      // 1-1번 Column
-                      child: Column(
-                          mainAxisAlignment:
-                              MainAxisAlignment.spaceBetween, // Column 사이 공백 넣기
-                          crossAxisAlignment:
-                              CrossAxisAlignment.start, // 텍스트 정렬
-                          children: [
-                            // 1-1-1번 Column
-                            Column(
-                              crossAxisAlignment:
-                                  CrossAxisAlignment.start, // 텍스트 정렬
-                              children: [
-                                SizedBox(
-                                  height: 150.0,
-                                ),
-                                // 위치
-                                Text('$cityName',
+              padding: EdgeInsets.all(20.0),
+              child:
+                  // 1번 Column
+                  Column(
+                mainAxisAlignment:
+                    MainAxisAlignment.spaceBetween, // Column 사이 공백 넣기
+                children: [
+                  // 확보할 수 있는 공간 최대로 하는 Widget
+                  Expanded(
+                    // 1-1번 Column
+                    child: Column(
+                        mainAxisAlignment:
+                            MainAxisAlignment.spaceBetween, // Column 사이 공백 넣기
+                        crossAxisAlignment: CrossAxisAlignment.start, // 텍스트 정렬
+                        children: [
+                          // 1-1-1번 Column
+                          Column(
+                            crossAxisAlignment:
+                                CrossAxisAlignment.start, // 텍스트 정렬
+                            children: [
+                              SizedBox(
+                                height: 150.0,
+                              ),
+                              // 위치
+                              Text('$cityName',
+                                  style: GoogleFonts.lato(
+                                      fontSize: 35.0,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.white)),
+                              Row(
+                                children: [
+                                  // 시간
+                                  TimerBuilder.periodic(
+                                    (Duration(minutes: 1)),
+                                    builder: (context) {
+                                      return Text(
+                                        '${getSystemTime()}',
+                                        style: GoogleFonts.lato(
+                                            fontSize: 16.0,
+                                            color: Colors.white),
+                                      );
+                                    },
+                                  ),
+                                  // 요일
+                                  Text(
+                                    DateFormat(' - EEEE, ').format(date),
                                     style: GoogleFonts.lato(
-                                        fontSize: 35.0,
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.white)),
-                                Row(
-                                  children: [
-                                    // 시간
-                                    TimerBuilder.periodic(
-                                      (Duration(minutes: 1)),
-                                      builder: (context) {
-                                        return Text(
-                                          '${getSystemTime()}',
-                                          style: GoogleFonts.lato(
-                                              fontSize: 16.0,
-                                              color: Colors.white),
-                                        );
-                                      },
-                                    ),
-                                    // 요일
-                                    Text(
-                                      DateFormat(' - EEEE, ').format(date),
-                                      style: GoogleFonts.lato(
-                                          fontSize: 16.0, color: Colors.white),
-                                    ),
-                                    // 일 월 년
-                                    Text(
-                                      DateFormat('d MMM, yyy').format(date),
-                                      style: GoogleFonts.lato(
-                                          fontSize: 16.0, color: Colors.white),
-                                    )
-                                  ],
-                                )
-                              ],
-                            ),
-                            // 1-1-2번 Column
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text('$temp\u2103', // 기온 표시 유니코드
+                                        fontSize: 16.0, color: Colors.white),
+                                  ),
+                                  // 일 월 년
+                                  Text(
+                                    DateFormat('d MMM, yyy').format(date),
                                     style: GoogleFonts.lato(
-                                        fontSize: 85.0,
-                                        fontWeight: FontWeight.w300,
-                                        color: Colors.white)),
-                                Row(
-                                  children: [
-                                    icon,
-                                    SizedBox(
-                                      width: 10.0,
-                                    ),
-                                    Text(
-                                      '$des',
-                                      style: GoogleFonts.lato(
-                                          fontSize: 16.0, color: Colors.white),
-                                    ),
-                                  ],
-                                )
-                              ],
-                            )
-                          ]),
-                    ),
-                    // 1-2번 Column
-                    Column(
-                      children: [
-                        Divider(
-                          height: 15.0,
-                          thickness: 2.0,
-                          color: Colors.white30,
-                        ),
-                        Row(
-                          mainAxisAlignment:
-                              MainAxisAlignment.spaceBetween, // Row 사이 공백 넣기
-                          children: [
-                            // 측정 지표, 이미지, 상태
-                            Column(
-                              children: [
-                                Text(
-                                  'AQI(대기질지수)',
+                                        fontSize: 16.0, color: Colors.white),
+                                  )
+                                ],
+                              )
+                            ],
+                          ),
+                          // 1-1-2번 Column
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text('$temp\u2103', // 기온 표시 유니코드
                                   style: GoogleFonts.lato(
-                                      fontSize: 14.0, color: Colors.white),
-                                ),
-                                SizedBox(height: 10.0),
-                                airIcon,
-                                SizedBox(height: 10.0),
-                                airState,
-                              ],
-                            ),
-                            Column(
-                              children: [
-                                Text(
-                                  '미세먼지',
-                                  style: GoogleFonts.lato(
-                                      fontSize: 14.0, color: Colors.white),
-                                ),
-                                SizedBox(height: 10.0),
-                                Text(
-                                  '$pm10',
-                                  style: GoogleFonts.lato(
-                                      fontSize: 24.0, color: Colors.white),
-                                ),
-                                SizedBox(height: 10.0),
-                                Text(
-                                  '㎍/m³',
-                                  style: GoogleFonts.lato(
-                                      fontSize: 14.0,
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                              ],
-                            ),
-                            Column(
-                              children: [
-                                Text(
-                                  '초미세먼지',
-                                  style: GoogleFonts.lato(
-                                      fontSize: 14.0, color: Colors.white),
-                                ),
-                                SizedBox(height: 10.0),
-                                Text(
-                                  '$pm2_5',
-                                  style: GoogleFonts.lato(
-                                      fontSize: 24.0, color: Colors.white),
-                                ),
-                                SizedBox(height: 10.0),
-                                Text(
-                                  '㎍/m³',
-                                  style: GoogleFonts.lato(
-                                      fontSize: 14.0,
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                              ],
-                            ),
-                            Column(
-                              children: [
-                                Text(
-                                  '우리집은?',
-                                  style: GoogleFonts.lato(
-                                      fontSize: 14.0, color: Colors.white),
-                                ),
-                                SizedBox(height: 10.0),
-                                Text(
-                                  '14.13',
-                                  style: GoogleFonts.lato(
-                                      fontSize: 24.0, color: Colors.white),
-                                ),
-                                SizedBox(height: 10.0),
-                                Text(
-                                  '㎍/m³',
-                                  style: GoogleFonts.lato(
-                                      fontSize: 14.0,
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                              ],
-                            ),
-                          ],
-                        )
-                      ],
-                    )
-                  ],
-                ))
+                                      fontSize: 85.0,
+                                      fontWeight: FontWeight.w300,
+                                      color: Colors.white)),
+                              Row(
+                                children: [
+                                  icon,
+                                  SizedBox(
+                                    width: 10.0,
+                                  ),
+                                  Text(
+                                    '$des',
+                                    style: GoogleFonts.lato(
+                                        fontSize: 16.0, color: Colors.white),
+                                  ),
+                                ],
+                              )
+                            ],
+                          )
+                        ]),
+                  ),
+                  // 1-2번 Column
+                  Column(
+                    children: [
+                      Divider(
+                        height: 15.0,
+                        thickness: 2.0,
+                        color: Colors.white30,
+                      ),
+                      Row(
+                        mainAxisAlignment:
+                            MainAxisAlignment.spaceBetween, // Row 사이 공백 넣기
+                        children: [
+                          // 측정 지표, 이미지, 상태
+                          Column(
+                            children: [
+                              Text(
+                                'AQI(대기질지수)',
+                                style: GoogleFonts.lato(
+                                    fontSize: 14.0, color: Colors.white),
+                              ),
+                              SizedBox(height: 10.0),
+                              airIcon,
+                              SizedBox(height: 10.0),
+                              airState,
+                            ],
+                          ),
+                          Column(
+                            children: [
+                              Text(
+                                '미세먼지',
+                                style: GoogleFonts.lato(
+                                    fontSize: 14.0, color: Colors.white),
+                              ),
+                              SizedBox(height: 10.0),
+                              Text(
+                                '$pm10',
+                                style: GoogleFonts.lato(
+                                    fontSize: 24.0, color: Colors.white),
+                              ),
+                              SizedBox(height: 10.0),
+                              Text(
+                                '㎍/m³',
+                                style: GoogleFonts.lato(
+                                    fontSize: 14.0,
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold),
+                              ),
+                            ],
+                          ),
+                          Column(
+                            children: [
+                              Text(
+                                '초미세먼지',
+                                style: GoogleFonts.lato(
+                                    fontSize: 14.0, color: Colors.white),
+                              ),
+                              SizedBox(height: 10.0),
+                              Text(
+                                '$pm2_5',
+                                style: GoogleFonts.lato(
+                                    fontSize: 24.0, color: Colors.white),
+                              ),
+                              SizedBox(height: 10.0),
+                              Text(
+                                '㎍/m³',
+                                style: GoogleFonts.lato(
+                                    fontSize: 14.0,
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold),
+                              ),
+                            ],
+                          ),
+                          Column(
+                            children: [
+                              Text(
+                                '우리집은?',
+                                style: GoogleFonts.lato(
+                                    fontSize: 14.0, color: Colors.white),
+                              ),
+                              SizedBox(height: 10.0),
+                              Text(
+                                '14.13',
+                                style: GoogleFonts.lato(
+                                    fontSize: 24.0, color: Colors.white),
+                              ),
+                              SizedBox(height: 10.0),
+                              Text(
+                                '㎍/m³',
+                                style: GoogleFonts.lato(
+                                    fontSize: 14.0,
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
           ],
         ),
       ),
