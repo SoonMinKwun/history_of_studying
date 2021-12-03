@@ -1,20 +1,21 @@
 // ignore_for_file: prefer_const_constructors_in_immutables, use_key_in_widget_constructors, avoid_print, unnecessary_string_interpolations, prefer_const_constructors, prefer_const_literals_to_create_immutables, avoid_unnecessary_containers
 
-import 'dart:ffi';
-
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart'; // 폰트
 import 'package:flutter_svg/flutter_svg.dart'; // svg 사용하기 위함
+import 'package:http/http.dart';
 import 'package:intl/intl.dart'; // DateTime Format
 import 'package:meonji/screens/login.dart';
 import 'package:timer_builder/timer_builder.dart'; // 시스템 시간 불러오기 위함
 import 'package:meonji/model/model.dart'; // condition에 따른 svg 표시 조건문
-import 'package:firebase_auth/firebase_auth.dart'; // 사용자 등록/인증 관련
 import 'package:meonji/data/my_location.dart'; // 위치정보관련
 import 'package:meonji/data/network.dart'; // 날씨데이터 관련
 import 'package:meonji/api/key.dart'; // API Key
 import 'package:meonji/screens/search.dart'; // 위치 검색 페이지
 import 'dart:io'; // sleep 기능 관련
+import 'package:firebase_auth/firebase_auth.dart'; // 사용자 등록/인증 관련
+import 'package:firebase_core/firebase_core.dart'; // firebase_core
+import 'package:firebase_database/firebase_database.dart'; // realtime database 관련
 
 // 빌더를 전달받음
 class WeatherScreen extends StatefulWidget {
@@ -42,6 +43,7 @@ class _WeatherScreenState extends State<WeatherScreen> {
   User? loggedUser; // 로그인된 유저
   late double currentLatitude; // 최근 위도 변수 선언
   late double currentLongitude; // 최근 경도 변수 선언
+  double? rasPM; // 라즈베리파이 미세먼지 측정 값
 
   // 유저 정보 불러오기
   void getCurrentUser() {
@@ -65,6 +67,7 @@ class _WeatherScreenState extends State<WeatherScreen> {
     super.initState();
     updateData(widget.parseWeatherData, widget.parseAirPollution);
     getCurrentUser(); // 초기화 될때마다 유저 정보 불러오기
+    readPM().whenComplete(() => setState(() {})); // readPM() 끝나고 setState 하기
   }
 
   // 날씨 업데이트
@@ -115,6 +118,18 @@ class _WeatherScreenState extends State<WeatherScreen> {
     widget.parseWeatherData = weatherData; // 새로운 날씨 데이터 삽입
     widget.parseAirPollution = airData; // 새로운 공기 데이터 삽입
     print('새로운 날씨, 공기 데이터 업데이트 완료');
+  }
+
+  // 라즈베리파이 측정 값 가져오기
+  Future<void> readPM() async {
+    final databaseReference = await FirebaseDatabase(
+            databaseURL:
+                "https://meonji-6fb27-default-rtdb.asia-southeast1.firebasedatabase.app/")
+        .reference(); // realtime database 인스턴스
+    await databaseReference.once().then((DataSnapshot snapshot) {
+      double data = snapshot.value['pm25']; // pm25값 가져오기
+      rasPM = data;
+    });
   }
 
   @override
@@ -359,7 +374,7 @@ class _WeatherScreenState extends State<WeatherScreen> {
                               ),
                               SizedBox(height: 10.0),
                               Text(
-                                '14.13',
+                                '$rasPM',
                                 style: GoogleFonts.lato(
                                     fontSize: 24.0, color: Colors.white),
                               ),
