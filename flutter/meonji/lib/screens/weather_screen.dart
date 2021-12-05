@@ -3,7 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart'; // 폰트
 import 'package:flutter_svg/flutter_svg.dart'; // svg 사용하기 위함
-import 'package:http/http.dart';
+import 'package:http/http.dart'; // http 연결 관련
 import 'package:intl/intl.dart'; // DateTime Format
 import 'package:meonji/screens/login.dart';
 import 'package:timer_builder/timer_builder.dart'; // 시스템 시간 불러오기 위함
@@ -43,7 +43,9 @@ class _WeatherScreenState extends State<WeatherScreen> {
   User? loggedUser; // 로그인된 유저
   late double currentLatitude; // 최근 위도 변수 선언
   late double currentLongitude; // 최근 경도 변수 선언
-  double? rasPM; // 라즈베리파이 미세먼지 측정 값
+  double? rasPM_10; // 라즈베리파이 미세먼지 10㎍/m³짜리 측정 값
+  double? rasPM_25; // 라즈베리파이 미세먼지 2.5㎍/m³짜리 측정 값
+  late String rasPM_date; // 라즈베리파이 미세먼지 최근 측정 날짜
 
   // 유저 정보 불러오기
   void getCurrentUser() {
@@ -127,9 +129,75 @@ class _WeatherScreenState extends State<WeatherScreen> {
                 "https://meonji-6fb27-default-rtdb.asia-southeast1.firebasedatabase.app/")
         .reference(); // realtime database 인스턴스
     await databaseReference.once().then((DataSnapshot snapshot) {
-      double data = snapshot.value['pm']['pm']['pm10']; // pm25값 가져오기
-      rasPM = data;
+      rasPM_10 = snapshot.value['pm']['pm']['pm10']; // pm10값 가져오기
+      rasPM_25 = snapshot.value['pm']['pm']['pm25']; // pm2.5값 가져오기
+      rasPM_date = snapshot.value['pm']['pm']['time']; // 측정 날짜값 가져오기
     });
+  }
+
+  // 오른쪽 하단 우리집은? 클릭했을때 메시지 띄우기
+  void rasPMClick() {
+    showDialog(
+      context: context,
+      // barrierDismissible - Dialog를 제외한 다른 화면 터치 x
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          // RoundedRectangleBorder - Dialog 화면 모서리 둥글게 조절
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10.0),
+          ),
+          // Dialog 제목
+          title: Column(
+            children: <Widget>[
+              new Text(
+                "우리집 미세먼지는 지금!",
+                style: GoogleFonts.lato(
+                    fontSize: 20.0,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black),
+              ),
+            ],
+          ),
+          //
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              new Text(
+                "미세먼지: $rasPM_10 ㎍/m³",
+                style: GoogleFonts.lato(
+                    fontSize: 15.0,
+                    fontWeight: FontWeight.normal,
+                    color: Colors.black),
+              ),
+              new Text(
+                "초미세먼지: $rasPM_25 ㎍/m³",
+                style: GoogleFonts.lato(
+                    fontSize: 15.0,
+                    fontWeight: FontWeight.normal,
+                    color: Colors.black),
+              ),
+              new Text(
+                "업데이트 날짜: $rasPM_date\n(일.월.년 시간 순서입니다!)",
+                style: GoogleFonts.lato(
+                    fontSize: 15.0,
+                    fontWeight: FontWeight.normal,
+                    color: Colors.black),
+              ),
+            ],
+          ),
+          actions: <Widget>[
+            new TextButton(
+              child: new Text("확인"),
+              onPressed: () {
+                Navigator.pop(context);
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 
   @override
@@ -365,28 +433,33 @@ class _WeatherScreenState extends State<WeatherScreen> {
                               ),
                             ],
                           ),
-                          Column(
-                            children: [
-                              Text(
-                                '우리집은?',
-                                style: GoogleFonts.lato(
-                                    fontSize: 14.0, color: Colors.white),
-                              ),
-                              SizedBox(height: 10.0),
-                              Text(
-                                '$rasPM',
-                                style: GoogleFonts.lato(
-                                    fontSize: 24.0, color: Colors.white),
-                              ),
-                              SizedBox(height: 10.0),
-                              Text(
-                                '㎍/m³',
-                                style: GoogleFonts.lato(
-                                    fontSize: 14.0,
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.bold),
-                              ),
-                            ],
+                          TextButton(
+                            onPressed: () {
+                              rasPMClick();
+                            },
+                            child: Column(
+                              children: [
+                                Text(
+                                  '우리집은?',
+                                  style: GoogleFonts.lato(
+                                      fontSize: 14.0, color: Colors.white),
+                                ),
+                                SizedBox(height: 10.0),
+                                Text(
+                                  '$rasPM_10',
+                                  style: GoogleFonts.lato(
+                                      fontSize: 24.0, color: Colors.white),
+                                ),
+                                SizedBox(height: 10.0),
+                                Text(
+                                  '㎍/m³',
+                                  style: GoogleFonts.lato(
+                                      fontSize: 14.0,
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                              ],
+                            ),
                           ),
                         ],
                       ),

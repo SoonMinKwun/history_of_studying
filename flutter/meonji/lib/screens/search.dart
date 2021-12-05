@@ -19,7 +19,7 @@ class _SearchState extends State<Search> {
   late String state; // 지역명
   late double currentLatitude; // 최근 위도 변수 선언
   late double currentLongitude; // 최근 경도 변수 선언
-  bool api_null_check = false; // api null 체크
+  bool api_null_check = true; // api null 체크
 
   // 지역 가져오기
   void searchLocation() {

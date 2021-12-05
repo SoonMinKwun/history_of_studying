@@ -44,6 +44,11 @@ class _LoadingState extends State<Loading> {
     getCurrentUser(); // 초기화 될때마다 유저 정보 불러오기
   }
 
+  @override
+  void dispose() {
+    super.dispose();
+  }
+
   void getLocation() async {
     print('loading.dart is running');
 
@@ -78,6 +83,18 @@ class _LoadingState extends State<Loading> {
 
   @override
   Widget build(BuildContext context) {
-    return CircularProgressIndicator(); // 로딩화면
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Container(
+            alignment: Alignment(0.0, 0.0),
+            child: CircularProgressIndicator(),
+            width: 200.0,
+            height: 200.0,
+          ),
+        ],
+      ),
+    ); // 로딩화면
   }
 }
