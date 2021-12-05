@@ -127,7 +127,7 @@ class _WeatherScreenState extends State<WeatherScreen> {
                 "https://meonji-6fb27-default-rtdb.asia-southeast1.firebasedatabase.app/")
         .reference(); // realtime database 인스턴스
     await databaseReference.once().then((DataSnapshot snapshot) {
-      double data = snapshot.value['pm25']; // pm25값 가져오기
+      double data = snapshot.value['pm']['pm']['pm10']; // pm25값 가져오기
       rasPM = data;
     });
   }
