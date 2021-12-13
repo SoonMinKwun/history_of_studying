@@ -141,7 +141,7 @@ class _SearchState extends State<Search> {
                               // 에러메시지
                               await Future.delayed(
                                 // 딜레이...
-                                const Duration(milliseconds: 1000),
+                                const Duration(milliseconds: 1200),
                                 () {
                                   if (api_null_check == true) {
                                     ScaffoldMessenger.of(context).showSnackBar(

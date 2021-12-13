@@ -211,12 +211,27 @@ class _WeatherScreenState extends State<WeatherScreen> {
         leading: IconButton(
           // 현재 위치 버튼
           icon: Icon(Icons.near_me),
-          onPressed: () {
+          onPressed: () async {
             getCurrentLocation(); // 현재 위치 불러오기
             updateData(widget.parseWeatherData,
                 widget.parseAirPollution); // 날씨, 공기 데이터 업데이트
-            setState(() {});
-            print('현재 위치 버튼 클릭 완료');
+            await Future.delayed(
+              // 딜레이...
+              const Duration(milliseconds: 1500),
+              () {
+                setState(
+                  () {
+                    print('현재 위치 버튼 클릭 완료');
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text(
+                            '현재 위치의 날씨정보를 불러옵니다.(화면이 바뀌지 않으면 한번 더 눌러주세요^^)'),
+                      ),
+                    );
+                  },
+                );
+              },
+            );
           },
           iconSize: 40.0,
         ),
